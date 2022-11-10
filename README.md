@@ -1,4 +1,4 @@
-# Selefra Github Provider
+# Selefra Okta Provider
 
 ## Introduction
 
