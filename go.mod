@@ -1,6 +1,6 @@
 module github.com/selefra/selefra-provider-okta
 
-go 1.19
+go 1.18
 
 require (
 	github.com/okta/okta-sdk-golang/v2 v2.14.0
