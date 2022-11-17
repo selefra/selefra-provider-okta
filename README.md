@@ -2,9 +2,7 @@
 
 Use this repo as a raw reference to **tables and schema** for Okta usage. [Here's](https://github.com/selefra/selefra-provider-okta/blob/main/docs/tables/okta.md) a summary of full coverage. 
 As an experienced user, the tables are especially helpful when you're writing SQL queries for specific task. 
-If you're just starting, try some of the pre-written rules before writing customized ones:
-
-- [Okta]()
+If you're just starting, navigate to our dodcumentation for example usage.
  
 ## Documentation
 
@@ -16,6 +14,7 @@ Selefra is a community-driven project, we welcome you to open a [GitHub Issue](h
 
 -  Join [Selefra Community](https://selefra.slack.com) on Slack. We host `Community Hour` for tutorials and Q&As on regular basis.
 -  Follow us on [Twitter](https://twitter.com/SelefraCorp) and share your thoughts！
+-  Email us at support@selefra.io
 
 ## CONTRIBUTING
 
