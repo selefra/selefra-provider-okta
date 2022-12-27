@@ -16,7 +16,6 @@ import (
 
 func TestProvider_PullTable(t *testing.T) {
 	os.Setenv("SELEFRA_DATABASE_DSN", "host=127.0.0.1 user=postgres password=password port=5432 dbname=postgres sslmode=disable")
-
 	wk := "."
 	config := `
 `
@@ -28,6 +27,7 @@ func Pull(myProvider *provider.Provider, config, workspace string, pullTables ..
 
 	diagnostics := schema.NewDiagnostics()
 
+	// init Provider
 	initProviderRequest := &shard.ProviderInitRequest{
 		Storage: &shard.Storage{
 			Type:           0,
@@ -55,4 +55,3 @@ func Pull(myProvider *provider.Provider, config, workspace string, pullTables ..
 		panic(diagnostics.AddFatal("provider pull table error: %s", err.Error()).ToString())
 	}
 }
-

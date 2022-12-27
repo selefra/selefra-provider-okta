@@ -3,11 +3,10 @@ package provider
 import (
 	"context"
 
+	"github.com/selefra/selefra-provider-okta/okta_client"
 	"github.com/selefra/selefra-provider-sdk/provider"
 	"github.com/selefra/selefra-provider-sdk/provider/schema"
 	"github.com/spf13/viper"
-
-	"github.com/selefra/selefra-provider-okta/okta_client"
 )
 
 const Version = "v0.0.1"
@@ -19,15 +18,15 @@ func GetProvider() *provider.Provider {
 		TableList: GenTables(),
 		ClientMeta: schema.ClientMeta{
 			InitClient: func(ctx context.Context, clientMeta *schema.ClientMeta, config *viper.Viper) ([]any, *schema.Diagnostics) {
-				var oktaConfig okta_client.OktaProviderConfigs
-				err := config.Unmarshal(&oktaConfig.Providers)
+				var oktaConfig okta_client.Configs
 
+				err := config.Unmarshal(&oktaConfig.Providers)
 				if err != nil {
 					return nil, schema.NewDiagnostics().AddErrorMsg("analysis config err: %s", err.Error())
 				}
 
 				if len(oktaConfig.Providers) == 0 {
-					return nil, schema.NewDiagnostics().AddErrorMsg("analysis config err: no configuration")
+					oktaConfig.Providers = append(oktaConfig.Providers, okta_client.Config{})
 				}
 
 				clients, err := okta_client.NewClients(oktaConfig)
@@ -35,6 +34,10 @@ func GetProvider() *provider.Provider {
 				if err != nil {
 					clientMeta.ErrorF("new clients err: %s", err.Error())
 					return nil, schema.NewDiagnostics().AddError(err)
+				}
+
+				if len(clients) == 0 {
+					return nil, schema.NewDiagnostics().AddErrorMsg("account information not found")
 				}
 
 				res := make([]interface{}, 0, len(clients))
@@ -50,15 +53,17 @@ func GetProvider() *provider.Provider {
 # token: "<YOUR_OKTA_TOKEN>"`
 			},
 			Validation: func(ctx context.Context, config *viper.Viper) *schema.Diagnostics {
-				var oktaConfig okta_client.OktaProviderConfigs
-				err := config.Unmarshal(&oktaConfig.Providers)
+				var client_config okta_client.Configs
+				err := config.Unmarshal(&client_config.Providers)
+
 				if err != nil {
 					return schema.NewDiagnostics().AddErrorMsg("analysis config err: %s", err.Error())
 				}
 
-				if len(oktaConfig.Providers) == 0 {
+				if len(client_config.Providers) == 0 {
 					return schema.NewDiagnostics().AddErrorMsg("analysis config err: no configuration")
 				}
+
 				return nil
 			},
 		},
@@ -71,8 +76,8 @@ func GetProvider() *provider.Provider {
 			DataSourcePullResultAutoExpand: true,
 		},
 		ErrorsHandlerMeta: schema.ErrorsHandlerMeta{
+
 			IgnoredErrors: []schema.IgnoredError{schema.IgnoredErrorOnSaveResult},
 		},
 	}
 }
-

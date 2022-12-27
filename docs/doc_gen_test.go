@@ -9,6 +9,7 @@ import (
 )
 
 func Test(t *testing.T) {
+
 	fmt.Println("begin...")
 	docOutputDirectory := os.Getenv("SELEFRA_DOC_OUTPUT_DIRECTORY")
 	if docOutputDirectory == "" {
@@ -20,4 +21,5 @@ func Test(t *testing.T) {
 		panic(err)
 	}
 	fmt.Println("done...")
+
 }
