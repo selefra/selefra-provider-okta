@@ -4,7 +4,7 @@ go 1.18
 
 require (
 	github.com/okta/okta-sdk-golang/v2 v2.16.0
-	github.com/selefra/selefra-provider-sdk v0.0.15
+	github.com/selefra/selefra-provider-sdk v0.0.14-0.20221130075054-5aeec5aeeba2
 	github.com/selefra/selefra-utils v0.0.2
 	github.com/spf13/viper v1.14.0
 )
