@@ -2,11 +2,11 @@ package provider
 
 import (
 	"context"
-
 	"github.com/selefra/selefra-provider-okta/okta_client"
 	"github.com/selefra/selefra-provider-sdk/provider"
 	"github.com/selefra/selefra-provider-sdk/provider/schema"
 	"github.com/spf13/viper"
+	"os"
 )
 
 const Version = "v0.0.1"
@@ -27,6 +27,22 @@ func GetProvider() *provider.Provider {
 
 				if len(oktaConfig.Providers) == 0 {
 					oktaConfig.Providers = append(oktaConfig.Providers, okta_client.Config{})
+				}
+
+				if oktaConfig.Providers[0].Domain == "" {
+					oktaConfig.Providers[0].Domain = os.Getenv("OKTA_DOMAIN")
+				}
+
+				if oktaConfig.Providers[0].Domain == "" {
+					return nil, schema.NewDiagnostics().AddErrorMsg("missing domain in configuration")
+				}
+
+				if oktaConfig.Providers[0].Token == "" {
+					oktaConfig.Providers[0].Token = os.Getenv("OKTA_TOKEN")
+				}
+
+				if oktaConfig.Providers[0].Token == "" {
+					return nil, schema.NewDiagnostics().AddErrorMsg("missing token in configuration")
 				}
 
 				clients, err := okta_client.NewClients(oktaConfig)
@@ -53,15 +69,11 @@ func GetProvider() *provider.Provider {
 # token: "<YOUR_OKTA_TOKEN>"`
 			},
 			Validation: func(ctx context.Context, config *viper.Viper) *schema.Diagnostics {
-				var client_config okta_client.Configs
-				err := config.Unmarshal(&client_config.Providers)
+				var clientConfig okta_client.Configs
+				err := config.Unmarshal(&clientConfig.Providers)
 
 				if err != nil {
 					return schema.NewDiagnostics().AddErrorMsg("analysis config err: %s", err.Error())
-				}
-
-				if len(client_config.Providers) == 0 {
-					return schema.NewDiagnostics().AddErrorMsg("analysis config err: no configuration")
 				}
 
 				return nil
